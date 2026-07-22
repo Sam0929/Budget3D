@@ -8,9 +8,7 @@ plugins {
 android {
     namespace = "com.example.budget3d"
     compileSdk {
-        version = release(36) {
-            minorApiLevel = 1
-        }
+        version = release(37)
     }
 
     defaultConfig {
@@ -55,7 +53,9 @@ dependencies {
     ksp(libs.hilt.compiler)
     // Extensão para injetar ViewModels no Jetpack Compose
     implementation(libs.hilt.navigation.compose)
-    testImplementation(libs.junit)
+    implementation(libs.androidx.room.runtime)
+    implementation(libs.androidx.room.ktx)
+    ksp(libs.androidx.room.compiler)
     androidTestImplementation(libs.androidx.junit)
     androidTestImplementation(libs.androidx.espresso.core)
     androidTestImplementation(platform(libs.androidx.compose.bom))
