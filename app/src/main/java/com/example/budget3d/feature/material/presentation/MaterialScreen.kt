@@ -10,6 +10,7 @@ import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
@@ -19,6 +20,7 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.lifecycle.viewmodel.compose.LocalViewModelStoreOwner
 import com.example.budget3d.feature.material.domain.model.Material
 import com.example.budget3d.ui.theme.Budget3DTheme
+import com.example.budget3d.R
 
 @Composable
 fun MaterialScreen(
@@ -26,12 +28,12 @@ fun MaterialScreen(
         checkNotNull<ViewModelStoreOwner>(
             LocalViewModelStoreOwner.current
         ) {
-                "No ViewModelStoreOwner was provided via LocalViewModelStoreOwner"
-            }, null
+            stringResource(R.string.view_model_store_owner_missing)
+        }, null
     )
 ) {
     val state by viewModel.uiState.collectAsStateWithLifecycle()
-    
+
     MaterialScreenContent(
         state = state,
         onAddMaterial = { name, price, weight ->
@@ -55,7 +57,7 @@ fun MaterialScreenContent(
     Scaffold(
         topBar = {
             TopAppBar(
-                title = { Text("Meus Materiais") },
+                title = { Text(text = stringResource(R.string.my_materials)) },
                 colors = TopAppBarDefaults.topAppBarColors(
                     containerColor = MaterialTheme.colorScheme.primaryContainer,
                     titleContentColor = MaterialTheme.colorScheme.onPrimaryContainer
@@ -64,7 +66,7 @@ fun MaterialScreenContent(
         },
         floatingActionButton = {
             FloatingActionButton(onClick = { showAddDialog = true }) {
-                Icon(Icons.Default.Add, contentDescription = "Adicionar Material")
+                Icon(Icons.Default.Add, contentDescription = stringResource(R.string.add_material))
             }
         }
     ) { paddingValues ->
@@ -77,19 +79,25 @@ fun MaterialScreenContent(
                 state.isLoading -> {
                     CircularProgressIndicator(modifier = Modifier.align(Alignment.Center))
                 }
+
                 state.error != null -> {
                     Text(
-                        text = "Erro: ${state.error}",
+                        text = stringResource(
+                            R.string.error,
+                            state.error
+                        ),
                         color = MaterialTheme.colorScheme.error,
                         modifier = Modifier.align(Alignment.Center)
                     )
                 }
+
                 state.materials.isEmpty() -> {
                     Text(
-                        text = "Nenhum material cadastrado.",
+                        text = stringResource(R.string.missing_material),
                         modifier = Modifier.align(Alignment.Center)
                     )
                 }
+
                 else -> {
                     LazyColumn(
                         modifier = Modifier.fillMaxSize(),
@@ -140,13 +148,18 @@ fun MaterialItem(
                 )
                 Spacer(modifier = Modifier.height(4.dp))
                 Text(
-                    text = "Preço: R$ ${
-                        String.format("%.2f", material.pricePerUnit)
-                    } / ${material.weightInGrams}g",
+                    text = stringResource(
+                        R.string.price,
+                        material.pricePerUnit,
+                        material.weightInGrams
+                    ),
                     style = MaterialTheme.typography.bodyMedium
                 )
                 Text(
-                    text = "Custo por grama: R$ ${String.format("%.4f", material.costPerGram)}",
+                    text = stringResource(
+                        R.string.cost_per_gram,
+                        material.costPerGram
+                    ),
                     style = MaterialTheme.typography.labelMedium,
                     color = MaterialTheme.colorScheme.secondary
                 )
@@ -161,7 +174,7 @@ fun MaterialItem(
             ) {
                 Icon(
                     Icons.Default.Delete,
-                    contentDescription = "Excluir"
+                    contentDescription = stringResource(R.string.delete)
                 )
             }
         }
@@ -170,7 +183,7 @@ fun MaterialItem(
 
 @Preview
 @Composable
-fun MaterialItemPreview(){
+fun MaterialItemPreview() {
 
     val materialTest = Material(
         id = "1",
@@ -179,7 +192,7 @@ fun MaterialItemPreview(){
         weightInGrams = 1000.0
     )
     Budget3DTheme {
-        MaterialItem(materialTest, {materialTest})
+        MaterialItem(materialTest, { materialTest })
     }
 }
 
@@ -194,25 +207,25 @@ fun AddMaterialDialog(
 
     AlertDialog(
         onDismissRequest = onDismiss,
-        title = { Text("Novo Material") },
+        title = { Text(text = stringResource(R.string.new_material)) },
         text = {
             Column(verticalArrangement = Arrangement.spacedBy(8.dp)) {
                 OutlinedTextField(
                     value = name,
                     onValueChange = { name = it },
-                    label = { Text("Nome (ex: PLA Preto)") },
+                    label = { Text(text = stringResource(R.string.label_material_name)) },
                     singleLine = true
                 )
                 OutlinedTextField(
                     value = price,
                     onValueChange = { price = it },
-                    label = { Text("Preço do Rolo (R$)") },
+                    label = { Text(text = stringResource(R.string.label_material_price)) },
                     singleLine = true
                 )
                 OutlinedTextField(
                     value = weight,
                     onValueChange = { weight = it },
-                    label = { Text("Peso total (gramas)") },
+                    label = { Text(text = stringResource(R.string.label_material_weight)) },
                     singleLine = true
                 )
             }
@@ -225,11 +238,11 @@ fun AddMaterialDialog(
                     onConfirm(name, priceParsed, weightParsed)
                 }
             ) {
-                Text("Salvar")
+                Text(text = stringResource(R.string.save))
             }
         },
         dismissButton = {
-            TextButton(onClick = onDismiss) { Text("Cancelar") }
+            TextButton(onClick = onDismiss) { Text(text = stringResource(R.string.cancel)) }
         }
     )
 }

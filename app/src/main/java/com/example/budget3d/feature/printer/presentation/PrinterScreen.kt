@@ -10,15 +10,14 @@ import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import androidx.lifecycle.ViewModelStoreOwner
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.lifecycle.viewmodel.compose.LocalViewModelStoreOwner
-import com.example.budget3d.feature.material.domain.model.Material
-import com.example.budget3d.feature.material.presentation.MaterialScreenContent
-import com.example.budget3d.feature.material.presentation.MaterialUiState
+import com.example.budget3d.R
 import com.example.budget3d.feature.printer.domain.model.Printer
 
 @Composable
@@ -27,7 +26,7 @@ fun PrinterScreen(
         checkNotNull<ViewModelStoreOwner>(
             LocalViewModelStoreOwner.current
         ) {
-            "No ViewModelStoreOwner was provided via LocalViewModelStoreOwner"
+            stringResource(R.string.view_model_store_owner_missing)
         }, null
     )
 ) {
@@ -56,7 +55,7 @@ fun PrinterScreenContent(
     Scaffold(
         topBar = {
             TopAppBar(
-                title = { Text("Minhas Impressoras") },
+                title = { Text(stringResource(R.string.my_printers)) },
                 colors = TopAppBarDefaults.topAppBarColors(
                     containerColor = MaterialTheme.colorScheme.primaryContainer,
                     titleContentColor = MaterialTheme.colorScheme.onPrimaryContainer
@@ -65,7 +64,7 @@ fun PrinterScreenContent(
         },
         floatingActionButton = {
             FloatingActionButton(onClick = { showAddDialog = true }) {
-                Icon(Icons.Default.Add, contentDescription = "Adicionar Impressora")
+                Icon(Icons.Default.Add, contentDescription = stringResource(R.string.add_printer))
             }
         }
     ) { paddingValues ->
@@ -77,13 +76,13 @@ fun PrinterScreenContent(
             when {
                 state.isLoading -> CircularProgressIndicator(modifier = Modifier.align(Alignment.Center))
                 state.error != null -> Text(
-                    "Erro: ${state.error}",
+                    stringResource(R.string.error, state.error),
                     color = MaterialTheme.colorScheme.error,
                     modifier = Modifier.align(Alignment.Center)
                 )
 
                 state.printers.isEmpty() -> Text(
-                    "Nenhuma impressora cadastrada.",
+                    stringResource(R.string.missing_printer),
                     modifier = Modifier.align(Alignment.Center)
                 )
 
@@ -105,7 +104,7 @@ fun PrinterScreenContent(
             AddPrinterDialog(
                 onDismiss = { showAddDialog = false },
                 onConfirm = { name, cost, lifespan, power ->
-                    onAddPrinter( name, cost, lifespan, power)
+                    onAddPrinter(name, cost, lifespan, power)
                     showAddDialog = false
                 }
             )
@@ -123,9 +122,9 @@ fun PrinterItem(
         modifier = Modifier.fillMaxWidth(),
         elevation = CardDefaults.cardElevation(defaultElevation = 2.dp)
     ) {
-        Row (
+        Row(
             verticalAlignment = Alignment.CenterVertically
-        ){
+        ) {
             Column(
                 modifier = Modifier
                     .weight(1f)
@@ -138,21 +137,25 @@ fun PrinterItem(
                 )
                 Spacer(modifier = Modifier.height(4.dp))
                 Text(
-                    text = "Custo Máquina: R$ ${String.format("%.2f", printer.machineCost)}",
+                    text = stringResource(R.string.printer_cost, printer.machineCost),
                     style = MaterialTheme.typography.bodyMedium
                 )
                 Text(
-                    text = "Vida Útil: ${printer.lifespanHours.toInt()}h",
+                    text = stringResource(R.string.printer_lifespan, printer.lifespanHours.toInt()),
                     style = MaterialTheme.typography.bodyMedium
                 )
                 Text(
-                    text = "Consumo: ${printer.powerConsumptionWatts.toInt()}W",
+                    text = stringResource(
+                        R.string.printer_power,
+                        printer.powerConsumptionWatts.toInt()
+                    ),
                     style = MaterialTheme.typography.bodyMedium
                 )
                 Text(
-                    text = "Depreciação: R$ ${
-                        String.format("%.4f", printer.depreciationPerHour)
-                    } /h",
+                    text = stringResource(
+                        R.string.printer_depreciation,
+                        printer.depreciationPerHour
+                    ),
                     style = MaterialTheme.typography.labelMedium,
                     color = MaterialTheme.colorScheme.secondary
                 )
@@ -166,7 +169,7 @@ fun PrinterItem(
             ) {
                 Icon(
                     Icons.Default.Delete,
-                    contentDescription = "Excluir"
+                    contentDescription = stringResource(R.string.delete)
                 )
             }
         }
@@ -185,31 +188,31 @@ fun AddPrinterDialog(
 
     AlertDialog(
         onDismissRequest = onDismiss,
-        title = { Text("Nova Impressora") },
+        title = { Text(stringResource(R.string.new_printer)) },
         text = {
             Column(verticalArrangement = Arrangement.spacedBy(8.dp)) {
                 OutlinedTextField(
                     value = name,
                     onValueChange = { name = it },
-                    label = { Text("Nome (ex: Ender 3)") },
+                    label = { Text(stringResource(R.string.printer_name_label)) },
                     singleLine = true
                 )
                 OutlinedTextField(
                     value = cost,
                     onValueChange = { cost = it },
-                    label = { Text("Valor da máquina (R$)") },
+                    label = { Text(stringResource(R.string.printer_cost_label)) },
                     singleLine = true
                 )
                 OutlinedTextField(
                     value = lifespan,
                     onValueChange = { lifespan = it },
-                    label = { Text("Vida útil (Horas)") },
+                    label = { Text(stringResource(R.string.printer_lifespan_label)) },
                     singleLine = true
                 )
                 OutlinedTextField(
                     value = power,
                     onValueChange = { power = it },
-                    label = { Text("Consumo Médio (Watts)") },
+                    label = { Text(stringResource(R.string.printer_power_label)) },
                     singleLine = true
                 )
             }
@@ -222,8 +225,8 @@ fun AddPrinterDialog(
                     val powerParsed = power.replace(",", ".").toDoubleOrNull() ?: 0.0
                     onConfirm(name, costParsed, lifespanParsed, powerParsed)
                 }
-            ) { Text("Salvar") }
+            ) { Text(stringResource(R.string.save)) }
         },
-        dismissButton = { TextButton(onClick = onDismiss) { Text("Cancelar") } }
+        dismissButton = { TextButton(onClick = onDismiss) { Text(stringResource(R.string.cancel)) } }
     )
 }

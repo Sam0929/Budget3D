@@ -20,17 +20,13 @@
     <string name="my_printers">Minhas Impressoras</string>
     <string name="add_printer">Adicionar Impressora</string>
     <string name="missing_printer">Nenhuma impressora cadastrada.</string>
-    <string name="printer_cost">Custo Máquina: R$ %1.2f</string>
-    <string name="printer_lifespan">Vida Útil: %1$dh</string>
-    <string name="printer_power">Consumo: %1$dW</string>
-    <string name="printer_depreciation">Depreciação: R$ %1.4f /h</string>
     <string name="new_printer">Nova Impressora</string>
-    <string name="printer_name_label">Nome (ex: Ender 3)</string>
-    <string name="printer_cost_label">Valor da máquina (R$)</string>
-    <string name="printer_lifespan_label">Vida útil (Horas)</string>
-    <string name="printer_power_label">Consumo Médio (Watts)</string>
-
-    <!-- ViewModel -->
-    <string name="view_model_store_owner_missing"> No ViewModelStoreOwner was provided via LocalViewModelStoreOwner</string>
-
+    <string name="label_printer_name">Nome (ex: Ender 3)</string>
+    <string name="label_printer_cost">Valor da máquina (R$)</string>
+    <string name="label_printer_lifespan">Vida útil (Horas)</string>
+    <string name="label_printer_power">Consumo Médio (Watts)</string>
+    <string name="printer_cost_label">Custo Máquina: R$ %1.2f</string>
+    <string name="printer_lifespan_label">Vida Útil: %1$dh</string>
+    <string name="printer_power_label">Consumo: %1$dW</string>
+    <string name="printer_depreciation_label">Depreciação: R$ %1.4f /h</string>
 </resources>
