@@ -18,6 +18,9 @@ class MaterialRepositoryImpl @Inject constructor(
         // Converte o modelo puro em modelo de banco antes de salvar
         dao.insertMaterial(material.toEntity())
     }
+    override suspend fun deleteMaterial(material: Material) {
+        dao.deleteMaterial(material.toEntity())
+    }
 
     override fun getAllMaterials(): Flow<List<Material>> {
         // O banco retorna um Flow de Entities.

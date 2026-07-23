@@ -5,6 +5,6 @@ import kotlinx.coroutines.flow.Flow
 
 interface MaterialRepository {
     suspend fun saveMaterial(material: Material)
-
+    suspend fun deleteMaterial(material: Material)
     fun getAllMaterials(): Flow<List<Material>>
 }

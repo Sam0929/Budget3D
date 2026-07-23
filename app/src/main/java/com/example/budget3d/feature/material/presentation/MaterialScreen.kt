@@ -5,17 +5,20 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
+import androidx.compose.material.icons.filled.Delete
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import androidx.lifecycle.ViewModelStoreOwner
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.lifecycle.viewmodel.compose.LocalViewModelStoreOwner
 import com.example.budget3d.feature.material.domain.model.Material
+import com.example.budget3d.ui.theme.Budget3DTheme
 
 @Composable
 fun MaterialScreen(
@@ -33,6 +36,9 @@ fun MaterialScreen(
         state = state,
         onAddMaterial = { name, price, weight ->
             viewModel.addMaterial(name, price, weight)
+        },
+        onDeleteMaterial = {
+            viewModel.deleteMaterial(it)
         }
     )
 }
@@ -41,7 +47,8 @@ fun MaterialScreen(
 @Composable
 fun MaterialScreenContent(
     state: MaterialUiState,
-    onAddMaterial: (String, Double, Double) -> Unit
+    onAddMaterial: (String, Double, Double) -> Unit,
+    onDeleteMaterial: (Material) -> Unit
 ) {
     var showAddDialog by remember { mutableStateOf(false) }
 
@@ -90,7 +97,7 @@ fun MaterialScreenContent(
                         verticalArrangement = Arrangement.spacedBy(8.dp)
                     ) {
                         items(state.materials, key = { it.id }) { material ->
-                            MaterialItem(material = material)
+                            MaterialItem(material = material, onDeleteMaterial)
                         }
                     }
                 }
@@ -110,32 +117,69 @@ fun MaterialScreenContent(
 }
 
 @Composable
-fun MaterialItem(material: Material) {
+fun MaterialItem(
+    material: Material,
+    onDelete: (Material) -> Unit
+) {
     Card(
         modifier = Modifier.fillMaxWidth(),
         elevation = CardDefaults.cardElevation(defaultElevation = 2.dp)
     ) {
-        Column(
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(16.dp)
+        Row(
+            verticalAlignment = Alignment.CenterVertically
         ) {
-            Text(
-                text = material.name,
-                style = MaterialTheme.typography.titleMedium,
-                fontWeight = FontWeight.Bold
-            )
-            Spacer(modifier = Modifier.height(4.dp))
-            Text(
-                text = "Preço: R$ ${String.format("%.2f", material.pricePerUnit)} / ${material.weightInGrams}g",
-                style = MaterialTheme.typography.bodyMedium
-            )
-            Text(
-                text = "Custo por grama: R$ ${String.format("%.4f", material.costPerGram)}",
-                style = MaterialTheme.typography.labelMedium,
-                color = MaterialTheme.colorScheme.secondary
-            )
+            Column(
+                modifier = Modifier
+                    .weight(1f)
+                    .padding(16.dp)
+            ) {
+                Text(
+                    text = material.name,
+                    style = MaterialTheme.typography.titleMedium,
+                    fontWeight = FontWeight.Bold
+                )
+                Spacer(modifier = Modifier.height(4.dp))
+                Text(
+                    text = "Preço: R$ ${
+                        String.format("%.2f", material.pricePerUnit)
+                    } / ${material.weightInGrams}g",
+                    style = MaterialTheme.typography.bodyMedium
+                )
+                Text(
+                    text = "Custo por grama: R$ ${String.format("%.4f", material.costPerGram)}",
+                    style = MaterialTheme.typography.labelMedium,
+                    color = MaterialTheme.colorScheme.secondary
+                )
+
+            }
+            IconButton(
+                onClick = {
+                    onDelete(material)
+                },
+                modifier = Modifier
+                    .padding(end = 8.dp)
+            ) {
+                Icon(
+                    Icons.Default.Delete,
+                    contentDescription = "Excluir"
+                )
+            }
         }
+    }
+}
+
+@Preview
+@Composable
+fun MaterialItemPreview(){
+
+    val materialTest = Material(
+        id = "1",
+        name = "PLA Branco",
+        pricePerUnit = 120.0,
+        weightInGrams = 1000.0
+    )
+    Budget3DTheme {
+        MaterialItem(materialTest, {materialTest})
     }
 }
 

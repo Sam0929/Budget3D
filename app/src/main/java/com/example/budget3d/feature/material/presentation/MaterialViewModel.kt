@@ -2,8 +2,10 @@ package com.example.budget3d.feature.material.presentation
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.example.budget3d.feature.material.domain.model.Material
 import com.example.budget3d.feature.material.domain.repository.MaterialRepository
 import com.example.budget3d.feature.material.domain.usecase.AddMaterialUseCase
+import com.example.budget3d.feature.material.domain.usecase.DeleteMaterialUseCase
 import com.example.budget3d.feature.material.presentation.MaterialUiState
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.SharingStarted
@@ -17,7 +19,8 @@ import javax.inject.Inject
 @HiltViewModel
 class MaterialViewModel @Inject constructor(
     private val materialRepository: MaterialRepository,
-    private val addMaterialUseCase: AddMaterialUseCase
+    private val addMaterialUseCase: AddMaterialUseCase,
+    private val deleteMaterialUseCase: DeleteMaterialUseCase
 ) : ViewModel() {
 
     val uiState: StateFlow<MaterialUiState> = materialRepository.getAllMaterials()
@@ -40,6 +43,12 @@ class MaterialViewModel @Inject constructor(
             } catch (e: IllegalArgumentException) {
                 //TODO : Exception
             }
+        }
+    }
+
+    fun deleteMaterial(material: Material){
+        viewModelScope.launch {
+            deleteMaterialUseCase(material)
         }
     }
 }
