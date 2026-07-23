@@ -14,6 +14,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import com.example.budget3d.feature.material.presentation.MaterialScreen
+import com.example.budget3d.feature.printer.presentation.PrinterScreen
 import com.example.budget3d.ui.theme.Budget3DTheme
 import dagger.hilt.android.AndroidEntryPoint
 
@@ -27,7 +28,7 @@ class MainActivity : ComponentActivity() {
                     modifier = Modifier.fillMaxSize(),
                     color = MaterialTheme.colorScheme.background
                 ) {
-                    MaterialScreen()
+                    PrinterScreen()
                 }
             }
         }
@@ -35,10 +36,10 @@ class MainActivity : ComponentActivity() {
 }
 
 
-@Preview(showBackground = true)
-@Composable
-fun MateriaPreview() {
-    Budget3DTheme {
-        MaterialScreen()
-    }
-}
+//@Preview(showBackground = true)
+//@Composable
+//fun MateriaPreview() {
+//    Budget3DTheme {
+//        MaterialScreen()
+//    }
+//}

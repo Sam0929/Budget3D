@@ -37,8 +37,8 @@ class MaterialViewModel @Inject constructor(
         )
 
     fun addMaterial(name: String, price: Double, weight: Double) {
-        viewModelScope.launch {
-            try {
+        viewModelScope.launch {                                                                  // viewModelScope é um escopo de coroutines
+            try {                                                                                // gerenciador de tarefas assincronas
                 addMaterialUseCase(name = name, pricePerUnit = price, weightInGrams = weight)
             } catch (e: IllegalArgumentException) {
                 //TODO : Exception
@@ -47,8 +47,8 @@ class MaterialViewModel @Inject constructor(
     }
 
     fun deleteMaterial(material: Material){
-        viewModelScope.launch {
-            deleteMaterialUseCase(material)
-        }
+        viewModelScope.launch {                    // viewModelScope.launch cria uma couroutine, execucao em paralelo
+            deleteMaterialUseCase(material)        // alem disso uma funcao suspend so pode ser chamado no contexto
+        }                                          // de uma funcao suspend ou de uma courotine
     }
 }

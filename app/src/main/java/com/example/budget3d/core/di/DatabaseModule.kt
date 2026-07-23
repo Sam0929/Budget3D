@@ -4,6 +4,7 @@ import android.app.Application
 import androidx.room.Room
 import com.example.budget3d.core.database.AppDatabase
 import com.example.budget3d.feature.material.data.local.MaterialDao
+import com.example.budget3d.feature.printer.data.local.PrinterDao
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -29,6 +30,12 @@ object DatabaseModule {
     @Singleton
     fun provideMaterialDao(db: AppDatabase): MaterialDao {
         return db.materialDao
+    }
+
+    @Provides
+    @Singleton
+    fun providePrinterDao(db: AppDatabase): PrinterDao {
+        return db.printerDao
     }
 
 }
